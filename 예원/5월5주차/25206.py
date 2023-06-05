@@ -11,3 +11,4 @@ for _ in range(20) :
         result += p * grade[rating.index(g)]
 
 print('%.6f' % (result / total))
+

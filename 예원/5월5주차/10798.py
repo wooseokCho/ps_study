@@ -7,6 +7,6 @@ for i in range(5):
 for i in range(15):
     for j in range(5):
         if c[j][i] == 0:
-            continue;
+            continue
         else:
             print(c[j][i], end='')
