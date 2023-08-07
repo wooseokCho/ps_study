@@ -1,0 +1,11 @@
+select B.TITLE, 
+B.BOARD_ID , 
+R.REPLY_ID, 
+R.WRITER_ID, 
+R.CONTENTS, 
+DATE_FORMAT(R.created_date , '%Y-%m-%d') as 'CREATED_DATE'
+from USED_GOODS_BOARD B 
+inner join  USED_GOODS_REPLY R 
+on B.BOARD_ID = R.BOARD_ID 
+where B.CREATED_DATE LIKE '2022-10%'
+order by 'CREATED_DATE' ASC, B.TITLE ASC 
