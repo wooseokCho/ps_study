@@ -10,6 +10,7 @@
 # 맨 윗면에 써져있는 수를 출력
 
 # 주사위 : 리스트랑 인덱스
+# x, y가 바뀌어서 입력 받는다는데 찾아보기
 # TODO: 다른 풀이 찾아보기
 ###########################
 
@@ -40,12 +41,12 @@ for _ in range(mh) :
 k_list = list(map(int, input().split()))
 
 # for dbg
-# direct=['우', '좌', '상', '하']
+direct=['우', '좌', '상', '하']
 
 for k in k_list :
     # for dbg
-    # print(f"({x}, {y})")
-    # print(f"\n\n명령 {direct[k-1]} {k}")
+    print(f"({x}, {y})")
+    print(f"\n\n명령 {direct[k-1]} {k}")
 
     copy_dice_n_map()
 
@@ -74,18 +75,18 @@ for k in k_list :
         h[(h_idx+2)%4] = w[(w_idx+2)%4]
 
     # for dbg
-    # tmp_str = " "+"  "*x+"!"
-    # print(tmp_str)
-    # for i, mi in enumerate(map_info) :
-    #     if i == y :
-    #         print("!", end="")
-    #     else :
-    #         print(" ", end="")
-    #     print(" ".join(map(str, mi)))    
-    # print(h, h_idx)
-    # print(w, w_idx)
+    tmp_str = " "+"  "*x+"!"
+    print(tmp_str)
+    for i, mi in enumerate(map_info) :
+        if i == y :
+            print("!", end="")
+        else :
+            print(" ", end="")
+        print(" ".join(map(str, mi)))    
+    print(h, h_idx)
+    print(w, w_idx)
 
-    print(f"{h[h_idx]}")
+    print(h[h_idx])
 
         
 
