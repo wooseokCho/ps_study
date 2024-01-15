@@ -55,7 +55,7 @@ while True :
             if r[1] == 'L' :
                 direction = direction_order[index - 1]
             else :
-                direction = direction_order[(index + 1) % 4] # list 범위 벗어나는 부분 주의
+                direction = direction_order[(index + 1) % 4] # list 범위 ㄴ
     # print(time)
     # print(snake)
     # input()
