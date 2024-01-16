@@ -18,6 +18,7 @@ def dbg_mmap(rx, ry, bx, by, visited) :
     print_mmap(visited)
 
 
+
 N, M = map(int, input().split(" "))
 mmap = []
 visited = []
@@ -67,6 +68,7 @@ tmp_queue = []
 queue = [[-1, r_loc, b_loc]] # [direction, r_loc, b_loc]
 cnt = 0
 
+# dbg 필요
 while True :
     for q in queue :
         before_direct, r_loc, b_loc = q
@@ -75,7 +77,6 @@ while True :
             if before_direct == d_idx or (before_direct + 2) % 4 == d_idx:
                 continue
 
- 
             ry, rx = r_loc
             by, bx = b_loc
 
@@ -88,30 +89,69 @@ while True :
 
             rstop = False
             bstop = False
+            false_flag = False
+            success_flag = False
 
             # rstop, bstop 등 벽에 부딪혔을 때, 홀에 빠졌을 때 나눠서 해줘야되는뎀
-            # n번째에서 모두 다 구멍에 빠지면 실패로 간주해야됨
+            # n번째에서 모두 다 구멍에 빠지면 실패로 간주해야됨 => 구멍에 빠진거를 queue에 안 넣어주면 됨
+            # 둘 다 구슬에 들어가는 경우는 false
             # 어렵구만 골드 1일만 해
             # 상하좌우 돌면서 벽, 구멍까리 순서대로 tmp_queue에 슉슈슉 넣어주기, queue처럼
             while not (rstop and bstop) :
                 mcy = my * m_cnt
                 mcx = mx * m_cnt
-                # print("R B")
-                # print(rstop, ry + mcy, rx + mcx)
-                # print(bstop, by + mcy, bx + mcx)
-                if not rstop :
-                    if mmap[ry + mcy][rx + mcx] == "#" :
-                        rstop = True
-                        ry, rx = ry + mcy - my, rx + mcx - mx
-                if not bstop :
-                    if mmap[by + mcy][bx + mcx] == "#" :
-                        bstop = True
-                        by, bx = by + mcy - my, bx + mcx - mx
+                print("R B")
+                print(rstop, ry + mcy, rx + mcx)
+                print(bstop, by + mcy, bx + mcx)
+
+                # 순서 정해서, 상하좌우 중 더 위에 있는 것부터
+                # direct 이거 곱해서, 더하고 더 큰 거부터 수행하기
+                # 순서 정해줘야할텐데..
+
+                ro = ry * my + rx * mx # r_order??
+                bo = by * my + bx * mx 
+
+                if ro > bo :
+                    if not rstop :
+                        if mmap[ry + mcy][rx + mcx] == "#" or "B":
+                            rstop = True
+                            ry, rx = ry + mcy - my, rx + mcx - mx
+                        if mmap[ry + mcy][rx + mcx] == "O" :
+                            success_flag = True
+                    if not bstop :
+                        if mmap[by + mcy][bx + mcx] == "#" or "R":
+                            bstop = True
+                            by, bx = by + mcy - my, bx + mcx - mx
+                        if mmap[by + mcy][bx + mcx] == "O" :
+                            false_flag = True
+                else :
+                    if not bstop :
+                        if mmap[by + mcy][bx + mcx] == "#" or "R":
+                            bstop = True
+                            by, bx = by + mcy - my, bx + mcx - mx
+                        if mmap[by + mcy][bx + mcx] == "O" :
+                            false_flag = True
+                    if not rstop :
+                        if mmap[ry + mcy][rx + mcx] == "#" or "B":
+                            rstop = True
+                            ry, rx = ry + mcy - my, rx + mcx - mx
+                        if mmap[ry + mcy][rx + mcx] == "O" :
+                            success_flag = True
+                    
                 m_cnt += 1
+
+            if success_flag and ~false_flag :
+                print(cnt)
+                break
 
             tmp_queue.append([d_idx, [ry, rx], [by, bx]])
             dbg_mmap(rx, ry, bx, by, visited) 
             input()
+
     queue = tmp_queue
     tmp_queue = []
     cnt += 1
+
+    if success_flag and ~false_flag :
+        print(cnt)
+        break
