@@ -22,24 +22,68 @@ for _ in range(N) :
 # [0][0], [1][0], [2][0]
 # [0][1], [1][1]
 
-# 전치 이용해서 사용하면 되지 않나?
-# 구현 어렵구만.. 종이에 쓰면서 해보기
-def move_and_merge_blocks() :
-    idx = 0 # 상, 좌 0 / 하, 우 N-1
+def print_map(mmap) :
+    for m in mmap :
+        print(" ".join(map(str, m)))
+
+def move_and_merge_blocks(direction, mmap) :
+    n_mmap = []
+    if direction == 'U' or 'L' :
+        idx = 0 # 상, 좌 0 / 하, 우 N-1
+
+    else :
+        idx = N-1
+
+    if direction == 'U' or 'D' :
+        mmap = [list(x) for x in zip(*mmap)]
+
     for m in mmap :
         while 0 in m :
             m.remove(0)
         # m 이동한 상태로 한번씩 돌면서 합쳐주기
         nm = []
-        for i in range(len(m)-1) :
-            if m[i] == m[i+1] :
-                nm.append(m[i]*2)
-                i = i + 1
-            else :
-                nm.append(m[i])
-                
+        if direction == 'U' or 'L' :
+            for i in range(len(m)-1) :
+                if m[i] == m[i+1] :
+                    nm.append(m[i]*2)
+                    i = i + 1
+                else :
+                    nm.append(m[i])   
+        else :
+            for i in range(len(m)-2, 1, -1) :
+                if m[i] == m[i+1] :
+                    nm.append(m[i]*2)
+                    i = i - 1
+                else :
+                    nm.append(m[i])
+
         while len(nm) == N:
             nm.insert(idx, 0)
+        n_mmap.append(nm)
+    
+    if direction == 'U' or 'D' :
+        mmap = [list(x) for x in zip(*mmap)]
+
+    return mmap
+
+direction = ['U', 'D', 'L', 'R']
+
+def max_value(mmap) :
+    max_v = 0
+    for m in mmap :
+        if max_v < max(m) :
+            max_v = max(m)
+    return max_v
+
+def recursive_move(mmap, cnt) :
+    print()
+    print_map(mmap)
+    if cnt >= 5 :
+        return max_value(mmap)
+    for d in direction :
+        recursive_move(move_and_merge_blocks(d, mmap), cnt+1)
+
+recursive_move(MAP, 0)
 
 # 상이라면
 # for x in range(0, N)
