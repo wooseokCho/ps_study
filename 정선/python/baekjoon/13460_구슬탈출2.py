@@ -1,37 +1,61 @@
 # https://www.acmicpc.net/problem/13460
-# 5 5
-# #####
-# #..B#
-# #.#.#
-# #RO.#
-# #####
+def move(y, x, dy, dx) :
+    cnt = 0
+    ny, nx = y, x
+    while (mmap[ny+dy][nx+dx] != "#" and mmap[ny][nx] != "O") :
+        ny += dy
+        nx += dx
+        cnt += 1
+    return ny, nx, cnt
 
 N, M = map(int, input().split(" "))
-map = []
-r_loc = []
-b_loc = []
-h_loc = []
+mmap = []
 
 for w in range(N) :
-    line = input().split("")
-    if len(r_loc) == 0 and line.index('R')  :
-        r_loc = [w, line.index('R')]
-    if len(b_loc) == 0 and line.index('B')  :
-        b_loc = [w, line.index('B')]
-    if len(b_loc) == 0 and line.index('B')  :
-        b_loc = [w, line.index('B')]
-    
-    map.append(line)
+    line = input()
+    if line.find('R') != -1 :
+        ry, rx = w, line.find('R')
 
-# BFS
-# 상하좌우 순서대로 모두 수행하며 결과 저장하면서 돌기
-# 그럼 구슬 위치도 따로 저장해야 되는가?
-# 상일 경우 [-1, 0], 하 [1, 0], 좌  [0, -1], 우 [0, +1]
-# R,B 중 앞에 index 확인해서 가까운 것부터 벽에 부딪히기 전까지 이동하기
-while True :
-    ry, rx = r_loc
-    if map[ry-1, rx] == '#' :
-        break
-    if map[ry-1, rx] == 'O' :
-        break
-    
+    if line.find('B') != -1 :
+        by, bx = w, line.find('B')
+
+    if line.find('O') != -1 :
+        hy, hx = w, line.find('O')
+
+    mmap.append(list(line))
+
+direct = [[-1, 0], [1, 0], [0, -1], [0, 1]] # '상', '하', '좌', '우'
+queue = [[ry, rx, by, bx, 0]] # [direction, r_loc, b_loc]
+visited = []
+
+def solve() :
+    while len(queue) != 0 :
+        ry, rx, by, bx, cnt = queue.pop(0)
+        if cnt >= 10 :
+            return -1
+        
+        visited.append([ry, rx, by, bx])
+        for d_idx in range(4) :
+            dy, dx = direct[d_idx]
+
+            nry, nrx, rcnt = move(ry, rx, dy, dx)
+            nby, nbx, bcnt = move(by, bx, dy, dx)
+
+            if nry == nby and nrx == nbx :
+                if nry == hy and nrx == hx :
+                    continue
+                if rcnt > bcnt :
+                    nry -= dy
+                    nrx -= dx
+                else :
+                    nby -= dy
+                    nbx -= dx
+
+            elif nry == hy and nrx == hx :
+                return cnt+1
+            
+            if [nry, nrx, nby, nbx] not in visited :
+                queue.append([nry, nrx, nby, nbx, cnt+1])
+    return -1
+
+print(solve())
